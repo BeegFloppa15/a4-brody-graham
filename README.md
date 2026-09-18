@@ -1,7 +1,7 @@
 Assignment 4 - Components
 ===
 
-Due: September 26th, by 1:59 PM.
+Due: September 25th, by 1:59 PM.
 
 For this assignment you will re-implement the client side portion of *either* A2 or A3 using either React or Svelte components. If you choose A3 you only need to use components for the data display / updating; you can leave your login UI as is.
 
