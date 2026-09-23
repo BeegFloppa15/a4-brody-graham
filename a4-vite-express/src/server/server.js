@@ -31,6 +31,8 @@ const logger = (req, res, next) => {
     next()
 }
 
+
+
 /**
  * 
  * @param {Request} req Attatches array of top 5 users as req.topFive
@@ -141,7 +143,6 @@ app.post('/login/attempt', express.json(), async function (req, res, next) {
     console.log('Login Attempted!')
     console.log(req.body)
     await attemptLogin(mongoConnection, req, res, next)
-    next()
 })
 
 app.use('/logout', logout)
