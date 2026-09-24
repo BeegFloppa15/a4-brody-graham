@@ -1,12 +1,42 @@
 import { useState, useEffect } from 'react'
 import './stats'
-import { StatsSection } from './stats'
+import { StatsSection, UsernameButton } from './stats'
 
 export default function GameScreen() {
     const [currentProblem, setCurrentProblem] = useState('???')
+    const [username, setUsername] = useState('???')
+    const [fullname, setFullname] = useState('')
+    const [correctGuesses, setCorrectGuesses] = useState(0)
+    const [totalGuesses, setTotalGuesses] = useState(0)
+    const [acc, setAcc] = useState(0)
 
-    //TODO: Implement the on load functionality in here. 
-    //useEffect()
+    // This would be called on screen load
+    useEffect(() => {
+
+        async function PopulateDisplays() {
+            const response = await fetch('/startgame', { method: 'GET' })
+            const gameStartData = await response.json()
+            console.log(gameStartData)
+
+            setCurrentProblem(gameStartData.newProblem)
+
+            setUsername(gameStartData.userData.username)
+            setCorrectGuesses(gameStartData.userData.correct_guesses)
+            setTotalGuesses(gameStartData.userData.total_guesses)
+
+            let buildFullname = ''
+            if (gameStartData.userData.firstname !== undefined) {
+                buildFullname += gameStartData.userData.firstname
+            }
+            if (gameStartData.userData.lastname !== undefined) {
+                buildFullname += ' ' + gameStartData.userData.lastname
+            }
+
+            setFullname(buildFullname)
+        }
+
+        PopulateDisplays()
+    }, [])
 
     async function submit() {
 
@@ -85,10 +115,11 @@ export default function GameScreen() {
             <header class="fill">
                 <nav>
                     <a href="changeInfo.html">
-                        <button id="username-display">Username: Modify Data</button>
+                        <UsernameButton username={username} />
                     </a>
                     <div class="max"></div>
-                    <StatsSection />
+
+                    <StatsSection fullname={fullname} correctGuesses={correctGuesses} totalGuesses={totalGuesses} />
                     <div class="max"></div>
                     <button data-ui="#logout-dialog">Logout</button>
                 </nav>
