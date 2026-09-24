@@ -13,7 +13,8 @@ export function StatsSection({ fullname, correctGuesses, totalGuesses }) {
             <p id="full-name">{fullname}</p>
             <p id="correct-count">Correct Guesses: {correctGuesses}</p>
             <p id="total-count">Total Guesses: {totalGuesses}</p>
-            <p id="accuracy">Accuracy: {decimalFormat.format(correctGuesses / totalGuesses)}</p>
+            <p id="accuracy">Accuracy: {decimalFormat.format(
+                totalGuesses > 0 ? correctGuesses / totalGuesses : 0)}</p>
         </div>
     )
 }

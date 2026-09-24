@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react'
 import './stats'
 import { StatsSection, UsernameButton } from './stats'
+import { CorrectResultsSnackbar, IncorrectResultsSnackbar } from './resultsSnackbar'
+import parse from 'html-react-parser'
 
 export default function GameScreen() {
+    let transitionTimer
     const [currentProblem, setCurrentProblem] = useState('???')
     const [username, setUsername] = useState('???')
     const [fullname, setFullname] = useState('')
     const [correctGuesses, setCorrectGuesses] = useState(0)
     const [totalGuesses, setTotalGuesses] = useState(0)
-    const [acc, setAcc] = useState(0)
+    const [correctActive, setCorrectActive] = useState(false)
+    const [incorrectActive, setIncorrectActive] = useState(false)
+    const [progressHidden, setProgressHidden] = useState(true)
 
-    // This would be called on screen load
+
+    // Get User Data and Problem on load
     useEffect(() => {
 
         async function PopulateDisplays() {
@@ -38,19 +44,26 @@ export default function GameScreen() {
         PopulateDisplays()
     }, [])
 
-    async function submit() {
+    async function submit(event) {
 
-        //correctResult.classList.remove('active')
-        //incorrectResult.classList.remove('active')
+        //Prevent Reloading
+        event.preventDefault()
 
+        // Hide Correct/Incorrect Snackbars if they aren't hidden
+        setCorrectActive(false)
+        setIncorrectActive(false)
+        clearTimeout(transitionTimer)
+
+        // Display progress wheel
+        setProgressHidden(true)
+
+        // Get answer and send it to server
         const input = document.querySelector('#answer'),
             json = {
                 problem: currentProblem,
                 answer: input.value
             },
             body = JSON.stringify(json)
-
-        answerProgress.hidden = false
         const response = await fetch('/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -63,31 +76,28 @@ export default function GameScreen() {
         const data = await response.json();
         console.log('text:', data);
 
-        answerProgress.hidden = true
-        updateUserInfoDisplay(data.user_data)
+        //Hide Progress Wheel
+        setProgressHidden(true)
 
         if (data.is_correct === "correct") {
-            // Show "Correct" element for 4 seconds
-            clearTimeout(transitionTimer)
-            correctResult.classList.add('active')
-
+            //Show "Correct" element for 2.5 seconds
+            setCorrectActive(true)
             transitionTimer = setTimeout(function () {
-                correctResult.classList.remove('active')
+                setCorrectActive(false)
             }, 4000)
-
-            setCurrentProblem(data.problem)
         }
         else {
-            // Show "incorrect" element for 4 seconds
-            clearTimeout(transitionTimer)
-            incorrectResult.classList.add('active')
-
+            // Show "incorrect" element for 2.5 seconds
+            setIncorrectActive(true)
             transitionTimer = setTimeout(function () {
-                incorrectResult.classList.remove('active')
-            }, 4000)
-
-            setCurrentProblem(data.problem)
+                setIncorrectActive(false)
+            }, 2500)
         }
+
+        // Update React Element Attributes (problem, correct guesses, total guesses)
+        setCurrentProblem(data.problem)
+        setCorrectGuesses(data.user_data.correct_guesses)
+        setTotalGuesses(data.user_data.total_guesses)
     }
 
     return (
@@ -98,10 +108,11 @@ export default function GameScreen() {
                         <h1>Solve The Problem</h1>
                         <form>
                             <p id="problem" class="inverse-surface padding"
-                                style={{ 'font-family': 'Times New Roman, Times, serif', 'font-size': '64px' }}>{currentProblem}
+                                style={{ 'font-family': 'Times New Roman, Times, serif', 'font-size': '64px' }}>
+                                {parse(currentProblem)}
                             </p>
                             <div class="field border prefix">
-                                <progress id="answer-waiting" class="circle indeterminate " value="50" max="100" hidden></progress>
+                                <progress id="answer-waiting" class="circle indeterminate " value="50" max="100" hidden={progressHidden}></progress>
                                 <input id="answer" type="number" aria-label="Answer Here" />
                                 <output>Answer Here</output>
                             </div>
@@ -109,8 +120,8 @@ export default function GameScreen() {
                         </form>
                     </div>
                 </article>
-                <div id="correct-result" class="snackbar primary top">Correct!</div>
-                <div id="incorrect-result" class="snackbar error top">Incorrect!</div>
+                <CorrectResultsSnackbar active={correctActive} />
+                <IncorrectResultsSnackbar active={incorrectActive} />
             </main>
             <header class="fill">
                 <nav>
