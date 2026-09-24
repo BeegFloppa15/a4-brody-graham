@@ -1,14 +1,14 @@
-import "./index.css";
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { StatsSection } from "./stats";
+import GameScreen from "./GameScreen"
 
+import "beercss";
 
+import "./colors.css"
 
-ReactDOM.createRoot(document.getElementById("stats")).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <StatsSection />
+    <GameScreen />
   </React.StrictMode>,
 );

@@ -11,7 +11,6 @@ import cookie from 'cookie-session'
 const uri = process.env.MONGODB_URI
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb"
 import 'dotenv/config';
-console.log(uri)
 const mongoConnection = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
