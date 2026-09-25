@@ -24,10 +24,10 @@ Do the following to complete this assignment:
 Sample Readme (delete the above when you're ready to submit, and modify the below so with your links and descriptions)
 ---
 
-## Your Web Application Title
+## Math Maker - A Simple Math Quiz App
 
-your hosting link e.g. http://a4-charlieroberts.me
+Hosted at: https://a4-brody-graham.onrender.com
 
-Include a very brief summary of your project here and what you changed / added to assignment #3. Briefly (3–4 sentences) answer the following question: did the new technology improve or hinder the development experience?
+For assignment 4, I ported my math maker app from assignment 3 to have the main game page use React with a few components. The Login, Register, and Modify Profile pages are still static HTML, but the main game page uses react for displaying the player's stats, updating the displayed problem, and displaying the "Correct/Incorrect" Banners.
 
-Unlike previous assignments, this assignment will be solely graded on whether or not you successfully complete it. Partial credit will be generously given.
+While I enjoy using react and I think it could be very helpful for designing front end web apps, trying to integrate it into an existing project with an existing HTML/JS front ended up being diffifcult. I needed to refactor all of my Front End JS to modify react state variables instead of storing elements with `getelementbyID`. I also found it difficult to get the production build of the app working with Vite-Express as it mixed both static HTML pages with react pages.

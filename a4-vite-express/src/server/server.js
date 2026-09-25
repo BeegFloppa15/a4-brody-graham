@@ -241,7 +241,7 @@ app.delete('/profile/delete', async function (req, res) {
 
 })
 
-app.use(express.static('public'))
+//app.use(express.static('public'))
 
 ViteExpress.listen(app, 3000, () =>
     console.log("Server is listening on port 3000..."),
