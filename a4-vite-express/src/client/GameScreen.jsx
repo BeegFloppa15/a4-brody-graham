@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './stats'
-import { StatsSection, UsernameButton } from './stats'
+import { DialogStats, GameHeader } from './stats'
 import { CorrectResultsSnackbar, IncorrectResultsSnackbar } from './resultsSnackbar'
 import parse from 'html-react-parser'
 
@@ -14,6 +14,7 @@ export default function GameScreen() {
     const [correctActive, setCorrectActive] = useState(false)
     const [incorrectActive, setIncorrectActive] = useState(false)
     const [progressHidden, setProgressHidden] = useState(true)
+    const [dialogStatsActive, setDialogStatsActive] = useState(false)
 
 
     // Get User Data and Problem on load
@@ -105,10 +106,10 @@ export default function GameScreen() {
             <main class="surface-bright">
                 <article class="padding border responsive">
                     <div class="padding center-align">
-                        <h1>Solve The Problem</h1>
-                        <form>
+                        <h1 >Solve The Problem</h1>
+                        <form style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "600px" }}>
                             <p id="problem" class="inverse-surface padding"
-                                style={{ 'font-family': 'Times New Roman, Times, serif', 'font-size': '64px' }}>
+                                style={{ 'font-family': 'Times New Roman, Times, serif', 'font-size': '64px', textWrapMode: "wrap", lineHeight: "64px" }}>
                                 {parse(currentProblem)}
                             </p>
                             <div class="field border prefix">
@@ -123,7 +124,7 @@ export default function GameScreen() {
                 <CorrectResultsSnackbar active={correctActive} />
                 <IncorrectResultsSnackbar active={incorrectActive} />
             </main>
-            <header class="fill">
+            {/* <header class="fill">
                 <nav>
                     <a href="changeInfo.html">
                         <UsernameButton username={username} />
@@ -134,7 +135,9 @@ export default function GameScreen() {
                     <div class="max"></div>
                     <button data-ui="#logout-dialog">Logout</button>
                 </nav>
-            </header>
+            </header> */}
+            <GameHeader fullname={fullname} correctGuesses={correctGuesses} totalGuesses={totalGuesses} username={username} setStatsActive={setDialogStatsActive} />
+            <DialogStats active={dialogStatsActive} setActive={setDialogStatsActive} fullname={fullname} correctGuesses={correctGuesses} totalGuesses={totalGuesses} />
             <dialog id="logout-dialog">
                 <h5>Log Out</h5>
                 <div>Are you sure you want to log out?
@@ -146,6 +149,7 @@ export default function GameScreen() {
                     </a>
                 </nav>
             </dialog>
+
         </div>
     )
 }
